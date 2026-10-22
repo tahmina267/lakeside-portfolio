@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tahmina Sultana · Demo</title>
+<meta name="description" content="An interactive 3D lakeside demo by Tahmina Sultana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css?v=14">
+</head>
+<body data-section="home" data-mode="night" class="booting">
+<canvas class="webgl"></canvas>
+
+<!-- loader -->
+<div class="loader">
+  <div class="moon"><div class="moon-shadow"></div></div>
+  <p class="loader-pct">0%</p>
+  <p class="loader-line">Gathering moonlight…</p>
+  <button class="enter" type="button">Step inside</button>
+</div>
+
+<div class="ui">
+  <header class="topbar">
+    <a class="mark" href="#home" data-go="home" aria-label="Home">
+      <span class="mark-badge">TS</span>
+      <span class="mark-text">Tahmina Sultana</span>
+    </a>
+    <div class="controls">
+      <a class="chip portfolio-chip" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">Portfolio ↗</a>
+      <button class="chip mode-toggle" type="button" aria-label="Toggle day and night">
+        <svg class="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><g><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg>
+      </button>
+      <button class="chip sound-toggle" type="button" aria-label="Toggle ambient sound" data-on="false">
+        <span></span><span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- home -->
+  <section class="panel home-panel" id="home">
+    <h1>Tahmina Sultana</h1>
+    <a class="portfolio-link" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">View my portfolio <span aria-hidden="true">→</span></a>
+    <p class="hint"><span class="hint-dot"></span>Drag to look around · tap a lantern to travel</p>
+  </section>
+
+  <!-- about -->
+  <section class="panel card about-panel" id="about" hidden>
+    <button class="close" type="button" data-go="home" aria-label="Close">×</button>
+    <p class="eyebrow">About</p>
+    <h2>Hello, I'm Tahmina.</h2>
+    <p>Sample introduction. A couple of sentences about who you are, what you make, and the problems you like to solve.</p>
+    <p>A second sample paragraph about background, favourite tools, or what you're looking for next.</p>
+    <ul class="facts">
+      <li><span>Based in</span>Your city</li>
+      <li><span>Focus</span>Sample focus areas</li>
+      <li><span>Status</span>Sample availability</li>
+    </ul>
+  </section>
+
+  <!-- work -->
+  <section class="panel work-panel" id="work" hidden>
+    <p class="eyebrow">Selected work</p>
+    <div class="work-list" tabindex="0" aria-label="Sample projects">
+      <a class="card work-card" style="--tint:#F2C9B4" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">
+        <span class="num">01 · 2026</span><h3>Sample project one</h3><p>A short tagline goes here.</p><p class="summary">One or two lines describing what the project is and what was done.</p><span class="role">Concept project · role goes here</span>
+        <span class="tags">Category · Sector</span><span class="disc-row"><i style="--c:#C2562F">Product</i><i style="--c:#2A3F9E">UI/UX</i></span>
+      </a>
+      <a class="card work-card" style="--tint:#CFD6F2" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">
+        <span class="num">02 · 2026</span><h3>Sample project two</h3><p>A short tagline goes here.</p><p class="summary">One or two lines describing what the project is and what was done.</p><span class="role">Concept project · role goes here</span>
+        <span class="tags">Category · Sector</span><span class="disc-row"><i style="--c:#2A3F9E">UI/UX</i><i style="--c:#3E8E57">Frontend</i></span>
+      </a>
+      <a class="card work-card" style="--tint:#6f7bd8" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">
+        <span class="num">03 · 2026</span><h3>Sample project three</h3><p>A short tagline goes here.</p><p class="summary">One or two lines describing what the project is and what was done.</p><span class="role">Concept project · role goes here</span>
+        <span class="tags">Category · Sector</span><span class="disc-row"><i style="--c:#3E8E57">Frontend</i><i style="--c:#B8860B">QA</i></span>
+      </a>
+      <a class="card work-card" style="--tint:#D6EBDA" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">
+        <span class="num">04 · 2026</span><h3>Sample project four</h3><p>A short tagline goes here.</p><p class="summary">One or two lines describing what the project is and what was done.</p><span class="role">Concept project · role goes here</span>
+        <span class="tags">Category · Sector</span><span class="disc-row"><i style="--c:#C2562F">Product</i><i style="--c:#7B6CFF">AI-native</i></span>
+      </a>
+    </div>
+    <p class="work-note">Sample projects · see the full portfolio for real case studies</p>
+  </section>
+
+  <!-- contact -->
+  <section class="panel contact-panel" id="contact" hidden>
+    <p class="eyebrow">Contact</p>
+    <h2>Let's make something<br><em>quietly remarkable.</em></h2>
+    <a class="mail" href="mailto:hello@example.com">hello@example.com</a>
+    <div class="socials">
+      <a class="chip" href="#contact">LinkedIn</a>
+      <a class="chip" href="#contact">+000 0000-000000</a>
+      <a class="chip" href="https://portfolio-tahmina5.vercel.app/" target="_blank" rel="noopener">Full portfolio</a>
+    </div>
+    <p class="avail">Sample contact details · demo only</p>
+  </section>
+
+  <div class="markers"></div>
+
+  <nav class="dock-nav" aria-label="Sections">
+    <span class="nav-glow"></span>
+    <a href="#home" data-go="home" class="on">Home</a>
+    <a href="#about" data-go="about">About</a>
+    <a href="#work" data-go="work">Work</a>
+    <a href="#contact" data-go="contact">Contact</a>
+  </nav>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module" src="./world.js?v=14"></script>
+</body>
+</html>
