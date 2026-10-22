@@ -61,7 +61,17 @@ function heightAt(x, z) {
 // ---------- renderer ----------
 const canvas = document.querySelector('canvas.webgl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.25));   // adapted at runtime by the frame-rate governor below
+// phones and tablets: start lighter (the frame-rate governor below raises it again if there's headroom)
+const MOBILE = matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 600;
+const MAX_PR = Math.min(devicePixelRatio, MOBILE ? 1.5 : 1.25);
+renderer.setPixelRatio(MOBILE ? 1 : MAX_PR);   // adapted at runtime by the frame-rate governor below
+// keep roughly the same horizontal view on any screen shape: narrow/portrait screens get a taller field of view
+const fovFor = (base, aspect = innerWidth / innerHeight) => {
+  const ref = 16 / 10;                               // the framing was composed for a 16:10 screen
+  if (aspect >= ref) return base;
+  const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(base) / 2) * ref * 0.82);   // allow a little crop on narrow screens
+  return Math.min(base * 1.9, THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hfov / 2) / aspect)));
+};
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.shadowMap.enabled = true;
@@ -70,14 +80,14 @@ renderer.shadowMap.needsUpdate = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.12, 3000);
+const camera = new THREE.PerspectiveCamera(fovFor(48), innerWidth / innerHeight, 0.12, 3000);
 scene.fog = new THREE.FogExp2(0x1a2340, 0.0042);
 
 // ---------- lighting ----------
 const hemi = new THREE.HemisphereLight(0x8fa6d8, 0x1a1a14, 0.4);
 const key = new THREE.DirectionalLight(0xb9c8ff, 0.6);  // moon at night, sun by day
 key.castShadow = true;
-key.shadow.mapSize.set(2048, 2048);
+key.shadow.mapSize.set(MOBILE ? 1024 : 2048, MOBILE ? 1024 : 2048);
 Object.assign(key.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, near: 1, far: 400 });
 key.shadow.bias = -0.0004;
 key.shadow.normalBias = 0.04;
@@ -337,7 +347,7 @@ const WAVE_GLSL = `
   }
 `;
 const water = new Water(new THREE.PlaneGeometry((LAKE_R + 14) * 2, (LAKE_R + 14) * 2, 220, 220), {
-  textureWidth: 512, textureHeight: 512, waterNormals,
+  textureWidth: MOBILE ? 256 : 512, textureHeight: MOBILE ? 256 : 512, waterNormals,
   sunDirection: moonDir.clone(), sunColor: 0xfff4e0, waterColor: 0x061420, distortionScale: 0.7, fog: true, alpha: 1,
 });
 water.rotation.x = -Math.PI / 2;
@@ -1264,8 +1274,9 @@ function scatter(mesh, n, pick) {
   return mesh;
 }
 {
-  const grass = new THREE.InstancedMesh(bladeGeo(0.55, 0.05, 4), windMaterial(0x93b553, 0.35), 60000);
-  scatter(grass, 60000, () => {
+  const GRASS = MOBILE ? 30000 : 60000;
+  const grass = new THREE.InstancedMesh(bladeGeo(0.55, 0.05, 4), windMaterial(0x93b553, 0.35), GRASS);
+  scatter(grass, GRASS, () => {
     const x = rr(-30, 30), z = rr(LAKE_R - 2, 60);
     const y = heightAt(x, z);
     if (y < 0.25 || Math.hypot(x * STRETCH, z) < LAKE_R) return null;
@@ -1664,7 +1675,7 @@ function tick() {
   look.yaw += (look.ty - look.yaw) * 0.12; look.pitch += (look.tp - look.pitch) * 0.12;
   camera.position.copy(camPos);
   if (!insideHouse && !walk) camera.position.y += Math.sin(t * 0.45) * 0.06;
-  const wantFov = insideHouse || (walk && walk.t > 0.75 && document.body.dataset.section === 'contact') ? 64 : 48;
+  const wantFov = fovFor(insideHouse || (walk && walk.t > 0.75 && document.body.dataset.section === 'contact') ? 64 : 48);
   if (Math.abs(camera.fov - wantFov) > 0.05) { camera.fov += (wantFov - camera.fov) * Math.min(1, dt * 2.5); camera.updateProjectionMatrix(); }
   dir.subVectors(camLook, camPos);
   const dist = dir.length(); dir.normalize();
@@ -1686,7 +1697,7 @@ function tick() {
   perfFrames++; perfTime += dt;
   if (perfTime > 2) {
     const fps = perfFrames / perfTime, pr = renderer.getPixelRatio();
-    const maxPr = Math.min(devicePixelRatio, 1.25);
+    const maxPr = MAX_PR;
     let next = pr;
     if (fps < 48 && pr > 0.75) next = Math.max(0.75, pr - 0.125);
     else if (fps > 58 && pr < maxPr) next = Math.min(maxPr, pr + 0.125);

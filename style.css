@@ -334,3 +334,84 @@ body[data-mode=day] .work-card h3{color:#f7f5ee}
 body[data-mode=day] .work-card .summary{color:rgba(175,193,182,.85)}
 body[data-mode=day] .work-card .tags{color:rgba(175,193,182,.75)}
 body[data-mode=day] .work-card .disc-row i{color:#f1efe6;background:rgba(241,239,230,.06);border-color:color-mix(in srgb,var(--c) 55%,#afc1b6 45%)}
+
+/* ===== any device ===== */
+html,body{height:100dvh}
+.ui{inset:0;height:100dvh}
+/* notches and home indicators */
+.topbar{padding-top:max(1.25rem,env(safe-area-inset-top));padding-left:max(1.5rem,env(safe-area-inset-left));padding-right:max(1.5rem,env(safe-area-inset-right))}
+.dock-nav{bottom:max(1.5rem,calc(env(safe-area-inset-bottom) + .6rem))}
+/* touch: no hover, so lantern labels are always shown and targets are finger-sized */
+@media (hover:none){
+  .marker{width:48px;height:48px;margin:-24px 0 0 -24px}
+  .marker::before{inset:17px}.marker::after{inset:9px}
+  .marker span{opacity:1}
+  .dock-nav a{padding:.75rem 1.1rem}
+  .chip{height:44px;min-width:44px}
+  .mode-toggle,.sound-toggle{width:44px}
+}
+html{-webkit-tap-highlight-color:transparent}
+canvas.webgl{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* panels never taller than the screen; scroll inside instead */
+.about-panel,.contact-panel{max-height:calc(100dvh - 9.5rem);overflow:auto;overscroll-behavior:contain}
+.work-list{-webkit-overflow-scrolling:touch}
+
+/* phones, portrait */
+@media (max-width:600px){
+  .topbar{padding-top:max(.9rem,env(safe-area-inset-top))}
+  .home-panel{left:1.25rem;right:1.25rem;bottom:calc(6rem + env(safe-area-inset-bottom))}
+  .home-panel h1{font-size:clamp(2.6rem,13vw,3.6rem)}
+  .about-panel{left:.75rem;right:.75rem;width:auto;top:4.5rem;bottom:auto;transform:none;padding:1.6rem 1.3rem 1.3rem;max-height:calc(100dvh - 10.5rem)}
+  .about-panel[hidden]{transform:translateY(14px)}
+  .about-panel h2{font-size:1.5rem}
+  .contact-panel{width:calc(100vw - 1.5rem);top:46%}
+  body.inside .contact-panel{left:50%;right:auto;transform:translate(-50%,-50%);width:calc(100vw - 1.5rem);padding:1.5rem 1.2rem}
+  body.inside .contact-panel[hidden]{transform:translate(-50%,calc(-50% + 14px))}
+  .work-panel{bottom:calc(5.5rem + env(safe-area-inset-bottom))}
+  .work-list{grid-auto-columns:82vw}
+  .dock-nav a{padding:.65rem .85rem;font-size:.82rem}
+}
+
+/* short screens: phones in landscape */
+@media (max-height:500px){
+  .topbar{padding-top:max(.6rem,env(safe-area-inset-top))}
+  .chip{height:36px;min-width:36px}
+  .mark-badge{width:32px;height:32px}
+  .dock-nav{bottom:max(.5rem,env(safe-area-inset-bottom));padding:3px}
+  .dock-nav a{padding:.45rem .9rem;font-size:.78rem}
+  .home-panel{bottom:3.6rem}
+  .home-panel h1{font-size:clamp(2rem,7vw,2.8rem)}
+  .portfolio-link{margin-top:.7rem;padding:.55rem 1rem;font-size:.8rem}
+  .home-panel .hint{display:none}
+  .about-panel{top:3.4rem;bottom:3.4rem;transform:none;max-height:none;padding:1.1rem 1.3rem;width:min(460px,60vw)}
+  .about-panel[hidden]{transform:translateY(10px)}
+  .about-panel h2{font-size:1.25rem;margin-bottom:.6rem}
+  .about-panel p{font-size:.82rem;line-height:1.5}
+  .contact-panel,body.inside .contact-panel{top:3.3rem;bottom:3.3rem;max-height:none;padding:1rem 1.2rem;display:flex;flex-direction:column;justify-content:center}
+  .contact-panel{transform:translateX(-50%)}
+  .contact-panel[hidden]{transform:translate(-50%,10px)}
+  body.inside .contact-panel{left:auto;right:max(1rem,env(safe-area-inset-right));width:min(420px,55vw);transform:none}
+  body.inside .contact-panel[hidden]{transform:translateY(10px)}
+  .contact-panel h2{font-size:1.25rem!important;margin-bottom:.5rem}
+  .contact-panel .mail{margin:.2rem 0 .6rem;font-size:1rem}
+  .contact-panel .avail{margin-top:.5rem}
+  .work-panel{top:3.2rem;bottom:3.2rem;display:flex;flex-direction:column;justify-content:center}
+  .work-panel .eyebrow,.work-note{display:none}
+  .work-list{grid-auto-columns:min(260px,40vw);padding-bottom:.4rem}
+  .work-card{padding:1rem 1.1rem}
+  .work-card .summary,.work-card .tags{display:none}
+  .work-card h3{font-size:1.1rem;margin:.3rem 0}
+  .marker span{font-size:.62rem}
+}
+
+/* phones: lantern labels would sit on top of the name; the dots + nav are enough there (tablets keep labels) */
+@media (hover:none){ .marker span{opacity:0} }   /* labels would sit on the name; dots + nav are enough on touch */
+@media (max-width:600px){
+  body.inside .contact-panel{max-height:calc(100dvh - 12rem)}
+  .work-note{display:none}
+}
+@media (max-height:500px){
+  .work-list{grid-auto-columns:min(240px,36vw)}
+  .work-card .role{margin-bottom:.35rem}
+  .work-card p:not(.summary){margin-bottom:.35rem;font-size:.8rem}
+}
