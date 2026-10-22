@@ -15,3 +15,5 @@ python3 -m http.server 5175
 ```
 
 three.js is loaded from the jsDelivr CDN via an import map.
+
+Deploys automatically to Vercel on every push to `main`.
