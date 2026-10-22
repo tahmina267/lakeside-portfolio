@@ -63,8 +63,9 @@ const canvas = document.querySelector('canvas.webgl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 // phones and tablets: start lighter (the frame-rate governor below raises it again if there's headroom)
 const MOBILE = matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 600;
-const MAX_PR = Math.min(devicePixelRatio, MOBILE ? 1.5 : 1.25);
-renderer.setPixelRatio(MOBILE ? 1 : MAX_PR);   // adapted at runtime by the frame-rate governor below
+const HQ = new URLSearchParams(location.search).has('hq');   // full-quality mode for screenshots
+const MAX_PR = HQ ? Math.max(2, devicePixelRatio) : Math.min(devicePixelRatio, MOBILE ? 1.5 : 1.25);
+renderer.setPixelRatio(MOBILE && !HQ ? 1 : MAX_PR);   // adapted at runtime by the frame-rate governor below
 // keep roughly the same horizontal view on any screen shape: narrow/portrait screens get a taller field of view
 const fovFor = (base, aspect = innerWidth / innerHeight) => {
   const ref = 16 / 10;                               // the framing was composed for a 16:10 screen
@@ -347,7 +348,7 @@ const WAVE_GLSL = `
   }
 `;
 const water = new Water(new THREE.PlaneGeometry((LAKE_R + 14) * 2, (LAKE_R + 14) * 2, 220, 220), {
-  textureWidth: MOBILE ? 256 : 512, textureHeight: MOBILE ? 256 : 512, waterNormals,
+  textureWidth: HQ ? 2048 : MOBILE ? 256 : 512, textureHeight: HQ ? 2048 : MOBILE ? 256 : 512, waterNormals,
   sunDirection: moonDir.clone(), sunColor: 0xfff4e0, waterColor: 0x061420, distortionScale: 0.7, fog: true, alpha: 1,
 });
 water.rotation.x = -Math.PI / 2;
@@ -1695,7 +1696,7 @@ function tick() {
   composer.render();
   // frame-rate governor: drop resolution a step if we can't hold ~50 fps, raise it again when there's headroom
   perfFrames++; perfTime += dt;
-  if (perfTime > 2) {
+  if (perfTime > 2 && !HQ) {
     const fps = perfFrames / perfTime, pr = renderer.getPixelRatio();
     const maxPr = MAX_PR;
     let next = pr;
